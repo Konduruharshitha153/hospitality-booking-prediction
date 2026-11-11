@@ -1,0 +1,472 @@
+{% extends 'index.html' %}
+
+{% block navbar %}
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+            <a class="nav-link" href="{{url_for('home')}}" style="color: white;">Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{url_for('about')}}" style="color: white; padding-left: 30px;">About</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{url_for('prediction')}}" style="color: yellow; padding-left: 30px;">Prediction</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{url_for('index')}}" style="color: white; padding-left: 30px;">Logout</a>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+<center>
+    <div style="margin-top: 50px; min-height: 100vh; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); padding: 20px;">
+        <div class="container-fluid">
+            <div class="contact_section_2">
+                <div class="row">
+
+                    {% if result %}
+                    <div style="display: flex; justify-content: center; align-items: center; flex-direction: column; width: 100%; padding: 20px;">
+                        <div class="prediction-card" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 20px; padding: 30px; margin: 20px 0; border: 1px solid rgba(255, 255, 255, 0.2); max-width: 1000px; width: 100%;">
+                            <h2 style="color: #4ecdc4; margin-bottom: 20px;">
+                                <i class="fas fa-chart-line" style="margin-right: 10px;"></i>
+                                Prediction Result
+                            </h2>
+                            
+                            {% if 'does not have' in result %}
+                                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 15px; border-left: 4px solid #28a745;">
+                                    <p style="color: white; font-size: 18px; margin: 0;">
+                                        <b style="color: #28a745;">{{result}}</b>
+                                    </p>
+                                </div>
+                            {% else %}
+                                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 15px; border-left: 4px solid #ff6b6b;">
+                                    <p style="color: white; font-size: 18px; margin: 0;">
+                                        <b style="color: #ff6b6b;">{{result}}</b>
+                                    </p>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- XAI Explanation Section -->
+                        <div class="xai-section" style="width: 100%; max-width: 1000px;">
+                            <div class="xai-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 25px; border-radius: 15px; margin-bottom: 30px; text-align: center;">
+                                <h3 style="color: white; margin-bottom: 10px;">
+                                    <i class="fas fa-brain" style="margin-right: 10px;"></i>
+                                    AI Decision Explanation
+                                </h3>
+                                <p style="color: rgba(255, 255, 255, 0.9); font-size: 16px; margin: 0;">
+                                    Understand how our AI model analyzed your booking details to make this prediction
+                                </p>
+                            </div>
+
+                            <!-- Key Factors Summary -->
+                            <div class="factors-summary" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 15px; padding: 25px; margin-bottom: 25px; border: 1px solid rgba(255, 255, 255, 0.2);">
+                                <h4 style="color: #4ecdc4; margin-bottom: 20px; display: flex; align-items: center;">
+                                    <i class="fas fa-key" style="margin-right: 10px;"></i>
+                                    Key Decision Factors
+                                </h4>
+                                
+                                <div class="factors-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                                    <!-- Factor 1: Lead Time -->
+                                    <div class="factor-item" style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px; border-left: 4px solid #ff6b6b;">
+                                        <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 8px;">
+                                            <span style="color: white; font-weight: bold;">Lead Time</span>
+                                            <span style="color: #ff6b6b; font-size: 12px; background: rgba(255, 107, 107, 0.2); padding: 2px 8px; border-radius: 10px;">High Impact</span>
+                                        </div>
+                                        <p style="color: #b8b8b8; font-size: 14px; margin: 0;">
+                                            Longer lead times increase cancellation risk as plans may change.
+                                        </p>
+                                    </div>
+
+                                    <!-- Factor 2: Deposit Type -->
+                                    <div class="factor-item" style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px; border-left: 4px solid #4ecdc4;">
+                                        <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 8px;">
+                                            <span style="color: white; font-weight: bold;">Deposit Type</span>
+                                            <span style="color: #4ecdc4; font-size: 12px; background: rgba(78, 205, 196, 0.2); padding: 2px 8px; border-radius: 10px;">Medium Impact</span>
+                                        </div>
+                                        <p style="color: #b8b8b8; font-size: 14px; margin: 0;">
+                                            Refundable deposits reduce risk, non-refundable increase commitment.
+                                        </p>
+                                    </div>
+
+                                    <!-- Factor 3: ADR -->
+                                    <div class="factor-item" style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px; border-left: 4px solid #ffd93d;">
+                                        <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 8px;">
+                                            <span style="color: white; font-weight: bold;">Daily Rate (ADR)</span>
+                                            <span style="color: #ffd93d; font-size: 12px; background: rgba(255, 217, 61, 0.2); padding: 2px 8px; border-radius: 10px;">Variable Impact</span>
+                                        </div>
+                                        <p style="color: #b8b8b8; font-size: 14px; margin: 0;">
+                                            Higher rates may increase cancellation risk due to cost sensitivity.
+                                        </p>
+                                    </div>
+
+                                    <!-- Factor 4: Guest History -->
+                                    <div class="factor-item" style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px; border-left: 4px solid #6c5ce7;">
+                                        <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 8px;">
+                                            <span style="color: white; font-weight: bold;">Guest History</span>
+                                            <span style="color: #6c5ce7; font-size: 12px; background: rgba(108, 92, 231, 0.2); padding: 2px 8px; border-radius: 10px;">Low Impact</span>
+                                        </div>
+                                        <p style="color: #b8b8b8; font-size: 14px; margin: 0;">
+                                            Repeat guests generally show lower cancellation rates.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SHAP Visualizations -->
+                            <div class="shap-explanations">
+                                <h4 style="color: #4ecdc4; margin-bottom: 25px; text-align: center;">
+                                    <i class="fas fa-chart-bar" style="margin-right: 10px;"></i>
+                                    Detailed Feature Analysis
+                                </h4>
+                                
+                                <!-- Waterfall Plot -->
+                                <div class="explanation-card" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 15px; padding: 25px; margin-bottom: 25px; border: 1px solid rgba(255, 255, 255, 0.2);">
+                                    <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 20px;">
+                                        <h5 style="color: #4ecdc4; margin: 0; flex: 1;">
+                                            <i class="fas fa-water" style="margin-right: 8px;"></i>
+                                            Prediction Breakdown
+                                        </h5>
+                                        <div style="background: rgba(78, 205, 196, 0.2); padding: 8px 15px; border-radius: 20px;">
+                                            <span style="color: #4ecdc4; font-size: 12px; font-weight: bold;">How each feature influenced the decision</span>
+                                        </div>
+                                    </div>
+                                    <p style="color: #b8b8b8; font-size: 14px; margin-bottom: 15px; line-height: 1.6;">
+                                        This waterfall chart shows how each feature pushed the prediction from the average cancellation rate (base value) 
+                                        to the final prediction. Features on the left increased cancellation risk, while features on the right decreased it.
+                                    </p>
+                                    <div style="background: white; padding: 20px; border-radius: 10px; text-align: center;">
+                                        <img src="data:image/png;base64,{{ shap_plots.waterfall_plot }}" style="width: 100%; max-width: 900px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
+                                    </div>
+                                    <div style="margin-top: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                        <div style="background: rgba(255, 107, 107, 0.1); padding: 10px; border-radius: 8px; border-left: 3px solid #ff6b6b;">
+                                            <span style="color: #ff6b6b; font-weight: bold; font-size: 12px;">↑ Risk Factors</span>
+                                            <p style="color: #b8b8b8; font-size: 12px; margin: 5px 0 0 0;">Features that increased cancellation probability</p>
+                                        </div>
+                                        <div style="background: rgba(78, 205, 196, 0.1); padding: 10px; border-radius: 8px; border-left: 3px solid #4ecdc4;">
+                                            <span style="color: #4ecdc4; font-weight: bold; font-size: 12px;">↓ Protective Factors</span>
+                                            <p style="color: #b8b8b8; font-size: 12px; margin: 5px 0 0 0;">Features that decreased cancellation probability</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Feature Importance -->
+                                <div class="explanation-card" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 15px; padding: 25px; margin-bottom: 25px; border: 1px solid rgba(255, 255, 255, 0.2);">
+                                    <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 20px;">
+                                        <h5 style="color: #4ecdc4; margin: 0; flex: 1;">
+                                            <i class="fas fa-sort-amount-down" style="margin-right: 8px;"></i>
+                                            Feature Importance Ranking
+                                        </h5>
+                                        <div style="background: rgba(108, 92, 231, 0.2); padding: 8px 15px; border-radius: 20px;">
+                                            <span style="color: #6c5ce7; font-size: 12px; font-weight: bold;">Most influential factors</span>
+                                        </div>
+                                    </div>
+                                    <p style="color: #b8b8b8; font-size: 14px; margin-bottom: 15px; line-height: 1.6;">
+                                        This chart ranks features by their impact on the prediction. The longer the bar, the more that feature 
+                                        influenced the model's decision. This helps identify which aspects of the booking were most important.
+                                    </p>
+                                    <div style="background: white; padding: 20px; border-radius: 10px; text-align: center;">
+                                        <img src="data:image/png;base64,{{ shap_plots.bar_plot }}" style="width: 100%; max-width: 900px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
+                                    </div>
+                                    <div style="margin-top: 15px;">
+                                        <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px;">
+                                            <span style="color: #4ecdc4; font-weight: bold; font-size: 14px;">Interpretation Guide:</span>
+                                            <ul style="color: #b8b8b8; font-size: 13px; margin: 10px 0 0 0; padding-left: 20px;">
+                                                <li>Top features had the strongest influence on the prediction</li>
+                                                <li>Positive SHAP values increase cancellation probability</li>
+                                                <li>Negative SHAP values decrease cancellation probability</li>
+                                                <li>The magnitude shows the strength of influence</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Prediction Form -->
+                    <div class="col-md-12">
+                        <form action="{{url_for('prediction')}}" method="post" enctype="multipart/form-data" class="prediction-form" style="background: linear-gradient(135deg, rgba(36, 158, 164, 0.9) 0%, rgba(78, 205, 196, 0.9) 100%); backdrop-filter: blur(10px); border-radius: 20px; margin: 20px auto; padding: 40px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.2); max-width: 1200px; width: 95%;">
+                            <h1 class="contact_taital" style="color: white; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); margin-bottom: 30px; text-align: center;">
+                                <i class="fas fa-hotel" style="margin-right: 15px;"></i>
+                                Hotel Booking Cancellation Prediction
+                            </h1>
+
+                            <!-- Single Column Layout -->
+                            <div class="form-container" style="display: flex; flex-direction: column; gap: 15px;">
+                                
+                                <!-- Row 1 -->
+                                <div class="form-row" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                                    <div class="form-group">
+                                        <label style="color: white; font-size: 13px; margin-bottom: 5px; display: block;">Lead Time (Days)*</label>
+                                        <input type="number" step="any" name="LeadTime" class="form-control-clean" placeholder="Days before arrival" required min="0" max="365">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="color: white; font-size: 13px; margin-bottom: 5px; display: block;">Arrival Date*</label>
+                                        <input type="date" name="ArrivalDate" class="form-control-clean" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="color: white; font-size: 13px; margin-bottom: 5px; display: block;">Weekend Nights*</label>
+                                        <input type="number" step="any" name="StaysInWeekendNights" class="form-control-clean" placeholder="Weekend nights" required min="0" max="10">
+                                    </div>
+                                </div>
+
+                                <!-- Row 2 -->
+                                <div class="form-row" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                                    <div class="form-group">
+                                        <label style="color: white; font-size: 13px; margin-bottom: 5px; display: block;">Week Nights*</label>
+                                        <input type="number" step="any" name="StaysInWeekNights" class="form-control-clean" placeholder="Week nights" required min="0" max="20">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="color: white; font-size: 13px; margin-bottom: 5px; display: block;">Adults*</label>
+                                        <input type="number" step="any" name="Adults" class="form-control-clean" placeholder="Adults count" required min="1" max="10">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="color: white; font-size: 13px; margin-bottom: 5px; display: block;">Children</label>
+                                        <input type="number" step="any" name="Children" class="form-control-clean" placeholder="Children count" min="0" max="10" value="0">
+                                    </div>
+                                </div>
+
+                                <!-- Row 3 -->
+                                <div class="form-row" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                                    <div class="form-group">
+                                        <label style="color: white; font-size: 13px; margin-bottom: 5px; display: block;">Babies</label>
+                                        <input type="number" step="any" name="Babies" class="form-control-clean" placeholder="Babies count" min="0" max="5" value="0">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="color: white; font-size: 13px; margin-bottom: 5px; display: block;">Repeated Guest*</label>
+                                        <select name="IsRepeatedGuest" class="form-control-clean" required>
+                                            <option value="">Select type</option>
+                                            <option value="0">First Time</option>
+                                            <option value="1">Returning</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="color: white; font-size: 13px; margin-bottom: 5px; display: block;">Meal Type*</label>
+                                        <select name="Meal" class="form-control-clean" required>
+                                            <option value="">Select meal</option>
+                                            <option value="BB">Bed & Breakfast</option>
+                                            <option value="HB">Half Board</option>
+                                            <option value="FB">Full Board</option>
+                                            <option value="SC">Self Catering</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Row 4 -->
+                                <div class="form-row" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                                    <div class="form-group">
+                                        <label style="color: white; font-size: 13px; margin-bottom: 5px; display: block;">Country*</label>
+                                        <select name="Country" class="form-control-clean" required>
+                                            <option value="">Select country</option>
+                                            <option value="France">France</option>
+                                            <option value="Germany">Germany</option>
+                                            <option value="Portugal">Portugal</option>
+                                            <option value="Spain">Spain</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="color: white; font-size: 13px; margin-bottom: 5px; display: block;">Market Segment*</label>
+                                        <select name="MarketSegment" class="form-control-clean" required>
+                                            <option value="">Select segment</option>
+                                            <option value="Online TA">Online TA</option>
+                                            <option value="Offline TA/TO">Offline TA/TO</option>
+                                            <option value="Groups">Groups</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="color: white; font-size: 13px; margin-bottom: 5px; display: block;">Distribution Channel*</label>
+                                        <select name="DistributionChannel" class="form-control-clean" required>
+                                            <option value="">Select channel</option>
+                                            <option value="TA">Travel Agent</option>
+                                            <option value="TO">Tour Operator</option>
+                                            <option value="Direct">Direct</option>
+                                            <option value="Corporate">Corporate</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Row 5 -->
+                                <div class="form-row" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                                    <div class="form-group">
+                                        <label style="color: white; font-size: 13px; margin-bottom: 5px; display: block;">ADR (€)*</label>
+                                        <input type="number" step="0.01" name="ADR" class="form-control-clean" placeholder="Daily rate" required min="0" max="1000">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="color: white; font-size: 13px; margin-bottom: 5px; display: block;">Special Requests</label>
+                                        <input type="number" step="any" name="TotalOfSpecialRequests" class="form-control-clean" placeholder="Requests count" min="0" max="10" value="0">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="color: white; font-size: 13px; margin-bottom: 5px; display: block;">Deposit Type*</label>
+                                        <select name="DepositType" class="form-control-clean" required>
+                                            <option value="">Select deposit</option>
+                                            <option value="No Deposit">No Deposit</option>
+                                            <option value="Refundable">Refundable</option>
+                                            <option value="Non Refund">Non-Refundable</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div style="text-align: center; margin-top: 25px;">
+                                <button type="submit" class="btn-predict-clean">
+                                    <i class="fas fa-rocket" style="margin-right: 10px;"></i>
+                                    Predict Cancellation Risk
+                                </button>
+                                <p style="color: white; margin-top: 10px; font-size: 12px; opacity: 0.8;">
+                                    * Required fields
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</center>
+
+<style>
+    /* Clean form controls */
+    .form-control-clean {
+        background: rgba(255, 255, 255, 0.95) !important;
+        border: 2px solid rgba(255, 255, 255, 0.3) !important;
+        border-radius: 8px !important;
+        padding: 10px 12px !important;
+        color: #333 !important;
+        transition: all 0.3s ease !important;
+        width: 100% !important;
+        font-size: 14px !important;
+        box-sizing: border-box !important;
+        margin-bottom: 0 !important;
+        height: 42px !important;
+    }
+
+    .form-control-clean:focus {
+        background: rgba(255, 255, 255, 1) !important;
+        border-color: #4ecdc4 !important;
+        box-shadow: 0 0 0 0.2rem rgba(78, 205, 196, 0.25) !important;
+        outline: none !important;
+    }
+
+    .form-control-clean::placeholder {
+        color: #666 !important;
+        opacity: 0.7 !important;
+    }
+
+    /* Form layout */
+    .form-container {
+        width: 100%;
+    }
+
+    .form-row {
+        width: 100%;
+        margin-bottom: 0;
+    }
+
+    .form-group {
+        margin-bottom: 0;
+        width: 100%;
+    }
+
+    /* Clean submit button */
+    .btn-predict-clean {
+        background: linear-gradient(135deg, #28a745, #20c997) !important;
+        border: none !important;
+        border-radius: 20px !important;
+        padding: 12px 35px !important;
+        color: white !important;
+        font-weight: 600 !important;
+        font-size: 16px !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3) !important;
+        cursor: pointer !important;
+    }
+
+    .btn-predict-clean:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4) !important;
+    }
+
+    /* Select dropdown styling */
+    select.form-control-clean {
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 12px;
+        padding-right: 35px !important;
+    }
+
+    /* Animations */
+    .prediction-form {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+        .prediction-form {
+            padding: 25px !important;
+            margin: 10px auto !important;
+        }
+        
+        .form-row {
+            grid-template-columns: 1fr !important;
+            gap: 12px !important;
+        }
+        
+        .btn-predict-clean {
+            width: 100% !important;
+            max-width: 280px !important;
+        }
+        
+        .form-control-clean {
+            font-size: 16px !important;
+        }
+        
+        .form-group label {
+            font-size: 14px !important;
+        }
+    }
+
+    /* Ensure proper spacing and no overlap */
+    .form-group {
+        position: relative;
+    }
+
+    .form-row {
+        position: relative;
+    }
+
+    /* Reduced gap between form rows */
+    .form-container {
+        gap: 12px !important;
+    }
+</style>
+
+<!-- Font Awesome for Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% endblock %}

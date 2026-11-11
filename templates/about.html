@@ -1,0 +1,45 @@
+{% extends 'index.html' %}
+
+{% block navbar %}
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+            <a class="nav-link" href="{{url_for('home')}}" style="color: white;">Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{url_for('about')}}" style="color: yellow; padding-left: 30px;">About</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{url_for('prediction')}}" style="color: white; padding-left: 30px;">Prediction</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{url_for('index')}}" style="color: white; padding-left: 30px;">Logout</a>
+        </li>
+    </ul>
+{% endblock %}
+               
+
+{% block content %}
+    <div class="banner_section layout_padding" style="display: flex; align-items: center; justify-content: center; height: 100vh; background-color: rgba(0, 0, 0, 0.63);">
+        <div class="container">
+            <div id="banner_slider" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="row justify-content-center">
+                        <div class="banner_taital_main text-center" style="margin-top: -110px;">
+                            
+                            <h1 class="banner_taital" style="color: white;">About!</h1>
+                            <p class="banner_text" style="color: white; padding: 30px; text-align: justify;">
+                                Booking cancellations greatly affect the hospitality industry. The industry incurs operational loss and revenue loss due to booking cancellations. Hence, this research aims toward machine learning (ML) techniques for interpretable forecasting of booking cancellations. These machine learning techniques comprise Random Forest (RF), XGBoost, LightGBM, and Gradient Boosting (GB) which are not only utilized to predict cancellation but could also provide interpretable insights into the most significant factors that led to these cancellations. Explainability artificial intelligence (XAI), apart from all the above, is incorporated to make sure that the processes of decision making in the models are interpretable in addition to being transparent to stakeholders in understanding the drivers of cancellations. This powerful ensemble of techniques provides a more accurate, interpretable, and actionable alternative for the hospitality industry in managing cancellations. The results show the models as proposed highly effective in correctly forecasting cancellations and providing certainly clear explanations as to what causes them, which can greatly improve decision-making and, hence, maximize resource management in operations of hospitality.
+                            </p>
+                            <h5 class="tasty_text">
+                                "Empowering Hospitality with Predictive Precision"
+                            </h5>
+                            
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
